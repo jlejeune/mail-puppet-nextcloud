@@ -64,12 +64,37 @@ class nextcloud (
     require   => File[$docroot],
   }
 
+  file { '/var/log/nextcloud':
+    ensure    => directory,
+    owner     => 'www-data',
+    group     => 'www-data',
+  }
+
+  file { '/opt/nextcloud':
+    ensure    => directory,
+    owner     => 'www-data',
+    group     => 'www-data',
+    require   => Package['nextcloud-files'],
+  }
+
+  logrotate::rule { 'nextcloud':
+    path         => '/var/log/nextcloud/nextcloud.log',
+    rotate       => 5,
+    rotate_every => 'week',
+  }
+
+  #TODO: data
+  #TODO: cron
+  #TODO: fail2ban
+
   #TODO: update default config.php file
   #file { "$docroot/config/config.php":
   #  owner     => 'www-data',
   #  group     => 'www-data',
   #  content   => template("${module_name}/config"),
   #  require   => Package['nextcloud-files'],
+  #  require   => File['/opt/nextcloud'],
+  #  require   => File['/var/log/nextcloud'],
   #}
 
   ## Nginx config
