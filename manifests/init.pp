@@ -25,8 +25,6 @@ class nextcloud (
   }
 
   ## Nextcloud config
-  include apt
-
   #TODO: move some variables in hiera
   apt::source { 'nextcloud':
     comment    => 'This is the Nextcloud Debian Repository',
@@ -70,11 +68,17 @@ class nextcloud (
     group     => 'www-data',
   }
 
-  file { '/opt/nextcloud':
+  file { '/opt/nextcloud/data':
     ensure    => directory,
     owner     => 'www-data',
     group     => 'www-data',
+    recurse   => true,
     require   => Package['nextcloud-files'],
+  }->
+  file { "/opt/nextcloud/data/.ocdata":
+    ensure    => file,
+    owner     => 'www-data',
+    group     => 'www-data',
   }
 
   logrotate::rule { 'nextcloud':
@@ -83,7 +87,7 @@ class nextcloud (
     rotate_every => 'week',
   }
 
-  #TODO: data
+  #TODO: fpm/www.conf : define env variables
   #TODO: cron
   #TODO: fail2ban
 
