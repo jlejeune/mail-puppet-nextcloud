@@ -87,8 +87,15 @@ class nextcloud (
     rotate_every => 'week',
   }
 
+  # Nextcloud cron
+  cron { 'nextcloud':
+    command      => '/usr/bin/php -f /var/www/nextcloud/cron.php',
+    user         => 'www-data',
+    minute       => '15',
+    require      => Package['nextcloud-files'],
+  }
+
   #TODO: fpm/www.conf : define env variables
-  #TODO: cron
   #TODO: fail2ban
 
   #TODO: update default config.php file
