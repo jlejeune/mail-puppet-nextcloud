@@ -91,7 +91,7 @@ class nextcloud (
   cron { 'nextcloud':
     command      => '/usr/bin/php -f /var/www/nextcloud/cron.php',
     user         => 'www-data',
-    minute       => '15',
+    minute       => '*/15',
     require      => Package['nextcloud-files'],
   }
 
